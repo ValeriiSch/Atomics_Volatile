@@ -6,16 +6,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Main {
     public static AtomicInteger counter_3 = new AtomicInteger(0);
     public static AtomicInteger counter_4 = new AtomicInteger(0);
-    ;
     public static AtomicInteger counter_5 = new AtomicInteger(0);
-    ;
 
     public static void main(String[] args) throws InterruptedException {
         Random random = new Random();
         String[] texts = new String[100_000];
         for (int i = 0; i < texts.length; i++) {
             texts[i] = generateText("abc", 3 + random.nextInt(3));
-            System.out.println(texts[i]);
+            //System.out.println(texts[i]);
         }
 
         Thread thread_3 = new Thread(() -> {
