@@ -13,45 +13,39 @@ public class Main {
         String[] texts = new String[100_000];
         for (int i = 0; i < texts.length; i++) {
             texts[i] = generateText("abc", 3 + random.nextInt(3));
-            //System.out.println(texts[i]);
+//            System.out.println(texts[i]);
         }
 
-        Thread thread_3 = new Thread(() -> {
+        Thread thread_isSameLetter = new Thread(() -> {
             for (String text : texts) {
-                if (text.length() == 3) {
-                    if (text.charAt(0) == text.charAt(2)) {
-                        counter_3.getAndIncrement();
-                    }
+                if (isSameLetter(text)) {
+                    incCounter(text.length());
                 }
             }
         });
-        thread_3.start();
+        thread_isSameLetter.start();
 
-        Thread thread_4 = new Thread(() -> {
+        Thread thread_isGrow = new Thread(() -> {
             for (String text : texts) {
-                if (text.length() == 4) {
-                    if ((text.charAt(0) == text.charAt(3)) && (text.charAt(1) == text.charAt(2))) {
-                        counter_4.getAndIncrement();
-                    }
+                if (isGrow(text) && !isSameLetter(text)) {
+                    incCounter(text.length());
                 }
             }
         });
-        thread_4.start();
+        thread_isGrow.start();
 
-        Thread thread_5 = new Thread(() -> {
+        Thread thread_isPolindrom = new Thread(() -> {
             for (String text : texts) {
-                if (text.length() == 5) {
-                    if ((text.charAt(0) == text.charAt(4)) && (text.charAt(1) == text.charAt(3))) {
-                        counter_5.getAndIncrement();
-                    }
+                if (isPolindrom(text) && !isSameLetter(text)) {
+                    incCounter(text.length());
                 }
             }
         });
-        thread_5.start();
+        thread_isPolindrom.start();
 
-        thread_3.join();
-        thread_4.join();
-        thread_5.join();
+        thread_isSameLetter.join();
+        thread_isGrow.join();
+        thread_isPolindrom.join();
 
         System.out.println("Красивых слов с длиной 3: " + counter_3.get() + " шт");
         System.out.println("Красивых слов с длиной 4: " + counter_4.get() + " шт");
@@ -66,5 +60,42 @@ public class Main {
             text.append(letters.charAt(random.nextInt(letters.length())));
         }
         return text.toString();
+    }
+
+    public static void incCounter(int length) {
+        if (length == 3) {
+            counter_3.getAndIncrement();
+        } else if ((length == 4)) {
+            counter_4.getAndIncrement();
+        } else if ((length == 5)) {
+            counter_5.getAndIncrement();
+        }
+    }
+
+    public static boolean isSameLetter(String text) {
+        for (int i = 0; i < text.length() - 1; i++) {
+            if (text.charAt(i) != text.charAt(i + 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isGrow(String text) {
+        for (int i = 0; i < text.length() - 1; i++) {
+            if (text.charAt(i) > text.charAt(i + 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isPolindrom(String text) {
+        for (int i = 0; i < (text.length()/2); i++) {
+            if (text.charAt(i) != text.charAt(text.length() - 1 - i)){
+                return false;
+            }
+        }
+        return true;
     }
 }
